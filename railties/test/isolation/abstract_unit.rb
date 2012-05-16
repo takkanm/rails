@@ -8,7 +8,7 @@
 # Rails booted up.
 require 'fileutils'
 
-require 'bundler/setup'
+require 'bundler/setup' unless defined?(Bundler)
 require 'minitest/autorun'
 require 'active_support/test_case'
 
@@ -104,8 +104,9 @@ module TestHelpers
         end
       end
 
-      unless options[:gemfile]
-        File.delete"#{app_path}/Gemfile"
+      gemfile_path = "#{app_path}/Gemfile"
+      if options[:gemfile].blank? && File.exist?(gemfile_path)
+        File.delete gemfile_path
       end
 
       routes = File.read("#{app_path}/config/routes.rb")
@@ -282,7 +283,7 @@ Module.new do
     require_environment = "-r #{environment}"
   end
 
-  `#{Gem.ruby} #{require_environment} #{RAILS_FRAMEWORK_ROOT}/railties/bin/rails new #{tmp_path('app_template')}`
+  `#{Gem.ruby} #{require_environment} #{RAILS_FRAMEWORK_ROOT}/railties/bin/rails new #{tmp_path('app_template')} --skip-gemfile`
   File.open("#{tmp_path}/app_template/config/boot.rb", 'w') do |f|
     if require_environment
       f.puts "Dir.chdir('#{File.dirname(environment)}') do"
