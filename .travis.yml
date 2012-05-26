@@ -1,6 +1,6 @@
 script: 'ci/travis.rb'
 before_install:
-  - git clone https://github.com/carlhuda/bundler.git
+  - git clone https://github.com/drogus/bundler.git
   - cd bundler
   - gem build bundler.gemspec
   - gem install bundler*.gem
