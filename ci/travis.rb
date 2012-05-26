@@ -40,6 +40,7 @@ class Build
 
   def announce(heading)
     puts "\n\e[1;33m[Travis CI] #{heading}\e[m\n"
+    puts "\n\e[1;33mBundler version: #{`bundle -v`}\e[m\n"
   end
 
   def heading
