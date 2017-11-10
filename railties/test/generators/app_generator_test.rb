@@ -756,7 +756,9 @@ class AppGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_inclusion_of_ruby_version
+  def test_inclusion_of_ruby_version_without_rbenv_version
+    env_rbenv_version = ENV['RBENV_VERSION']
+    ENV['RBENV_VERSION'] = nil
     run_generator
 
     assert_file "Gemfile" do |content|
@@ -765,6 +767,21 @@ class AppGeneratorTest < Rails::Generators::TestCase
     assert_file ".ruby-version" do |content|
       assert_match(/#{RUBY_VERSION}/, content)
     end
+    ENV['RBENV_VERSION'] = env_rbenv_version
+  end
+
+  def test_inclusion_of_ruby_version_with_rbenv_version
+    env_rbenv_version = ENV['RBENV_VERSION']
+    ENV['RBENV_VERSION'] = "#{RUBY_VERSION}-preview1"
+    run_generator
+
+    assert_file "Gemfile" do |content|
+      assert_match(/ruby '#{RUBY_VERSION}'/, content)
+    end
+    assert_file ".ruby-version" do |content|
+      assert_match(/#{RUBY_VERSION}-preview1/, content)
+    end
+    ENV['RBENV_VERSION'] = env_rbenv_version
   end
 
   def test_version_control_initializes_git_repo
