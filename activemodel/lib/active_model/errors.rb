@@ -165,6 +165,8 @@ module ActiveModel
     #     # then yield :name and "must be specified"
     #   end
     def each
+      return enum_for(:each) { size } unless block_given?
+
       messages.each_key do |attribute|
         messages[attribute].each { |error| yield attribute, error }
       end
